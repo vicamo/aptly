@@ -63,10 +63,10 @@ func flushColections() {
 //
 // Should be run in goroutine!
 func cacheFlusher() {
-	ticker := time.Tick(15 * time.Minute)
+	ticker := time.NewTicker(15 * time.Minute)
 
 	for {
-		<-ticker
+		<-ticker.C
 
 		flushColections()
 	}
