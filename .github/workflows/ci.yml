@@ -1,0 +1,42 @@
+---
+name: CI
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  golangci:
+    strategy:
+      matrix:
+        # golangci-lint >= 1.40 depends on go 1.15
+        go-version: [1.15, 1.16, 1.17]
+        golangci-lint-version: [latest]
+        include:
+          - go-version: 1.11
+            golangci-lint-version: v1.39
+          - go-version: 1.12
+            golangci-lint-version: v1.39
+          - go-version: 1.13
+            golangci-lint-version: v1.39
+          - go-version: 1.14
+            golangci-lint-version: v1.39
+    name: Run golangci-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: ${{ matrix.golangci-lint-version }}
+          args: --verbose
+          skip-go-installation: true
