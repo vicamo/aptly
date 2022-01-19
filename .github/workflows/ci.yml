@@ -40,3 +40,21 @@ jobs:
           version: ${{ matrix.golangci-lint-version }}
           args: --verbose
           skip-go-installation: true
+
+  flake8:
+    strategy:
+      matrix:
+        python: ['2.7']
+        os: ['ubuntu-latest']
+    name: Run flake8
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Python dependencies
+        run: |
+          pip install -r system/requirements.txt
+      - run: flake8
