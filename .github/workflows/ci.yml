@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  golangci:
+  build:
     strategy:
       matrix:
         # golangci-lint >= 1.40 depends on go 1.15
@@ -27,10 +27,13 @@ jobs:
             golangci-lint-version: v1.39
           - go-version: 1.14
             golangci-lint-version: v1.39
-    name: Run golangci-lint
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          # `git describe` used to determine to version string.
+          fetch-depth: 0
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
@@ -40,6 +43,16 @@ jobs:
           version: ${{ matrix.golangci-lint-version }}
           args: --verbose
           skip-go-installation: true
+      - name: Build binaries
+        run: make RUN_LONG_TESTS=no
+      - name: Prepare release
+        run: make release
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary-go${{ matrix.go-version }}
+          path: build/*
+          retention-days: 7
 
   flake8:
     strategy:
