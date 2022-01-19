@@ -132,7 +132,7 @@ func aptlySnapshotShowJSON(cmd *commander.Command, args []string) error {
 	if withPackages {
 		if snapshot.RefList() != nil {
 			var list *deb.PackageList
-			list, err = deb.NewPackageListFromRefList(snapshot.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
+			list, _ = deb.NewPackageListFromRefList(snapshot.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
 
 			list.PrepareIndex()
 			list.ForEachIndexed(func(p *deb.Package) error {

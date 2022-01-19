@@ -112,7 +112,7 @@ func aptlyMirrorShowJSON(cmd *commander.Command, args []string) error {
 	if withPackages {
 		if repo.RefList() != nil {
 			var list *deb.PackageList
-			list, err = deb.NewPackageListFromRefList(repo.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
+			list, _ = deb.NewPackageListFromRefList(repo.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
 
 			list.PrepareIndex()
 			list.ForEachIndexed(func(p *deb.Package) error {
