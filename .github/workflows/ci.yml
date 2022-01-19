@@ -29,6 +29,8 @@ jobs:
             golangci-lint-version: v1.39
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.build.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -44,7 +46,11 @@ jobs:
           args: --verbose
           skip-go-installation: true
       - name: Build binaries
-        run: make RUN_LONG_TESTS=no
+        id: build
+        run: |
+          echo "::set-output name=version::$(make version)"
+
+          make RUN_LONG_TESTS=no
       - name: Upload Codecov reports
         uses: codecov/codecov-action@v2
         with:
@@ -76,3 +82,52 @@ jobs:
         run: |
           pip install -r system/requirements.txt
       - run: flake8
+
+  system-test:
+    strategy:
+      matrix:
+        go-version: [1.11, 1.12, 1.13, 1.14, 1.15, 1.16, 1.17]
+        python: ['2.7']
+        os: ['ubuntu-latest']
+    name: Run system tests
+    runs-on: ${{ matrix.os }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # `git describe` used to determine to version string.
+          fetch-depth: 0
+      - name: Clone aptly-fixture-db
+        uses: actions/checkout@v2
+        with:
+          repository: 'aptly-dev/aptly-fixture-db'
+          path: 'aptly-fixture-db'
+      - name: Clone aptly-fixture-pool
+        uses: actions/checkout@v2
+        with:
+          repository: 'aptly-dev/aptly-fixture-pool'
+          path: 'aptly-fixture-pool'
+      - name: Download binary-go${{ matrix.go-version }}
+        uses: actions/download-artifact@v2
+        with:
+          name: binary-go${{ matrix.go-version }}
+          path: build
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          pip install -r system/requirements.txt
+      - name: Move testing artifacts in position
+        env:
+          APTLY_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          tar -C build -xf "build/aptly_${APTLY_VERSION}_linux_amd64.tar.gz"
+          sudo cp "build/aptly_${APTLY_VERSION}_linux_amd64/aptly" /usr/bin
+          mv aptly-fixture-db aptly-fixture-pool ~
+      - name: System tests
+        env:
+          APTLY_VERSION: ${{ needs.build.outputs.version }}
+          NO_FTP_ACCESS: "yes"
+        run: python${{ matrix.python }} system/run.py --long
