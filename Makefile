@@ -22,7 +22,7 @@ modules:
 	go mod tidy -v
 
 dev:
-	go get -u github.com/laher/goxc
+	go get -u github.com/laher/goxc@e513940c33796cf695d78637d035a6c7796ff030
 
 check: system/env
 ifeq ($(RUN_LONG_TESTS), yes)
