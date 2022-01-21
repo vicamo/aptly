@@ -119,6 +119,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r system/requirements.txt
+
+          sudo apt-get update --quiet
+          sudo apt-get install --no-install-recommends --yes \
+              graphviz \
+              ;
       - name: Move testing artifacts in position
         env:
           APTLY_VERSION: ${{ needs.build.outputs.version }}
