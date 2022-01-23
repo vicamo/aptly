@@ -45,6 +45,11 @@ jobs:
           skip-go-installation: true
       - name: Build binaries
         run: make RUN_LONG_TESTS=no
+      - name: Upload Codecov reports
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
       - name: Prepare release
         run: make release
       - name: Upload built binaries
