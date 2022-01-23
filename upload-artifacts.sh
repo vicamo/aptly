@@ -8,7 +8,7 @@ folder=`mktemp -u tmp.XXXXXXXXXXXXXXX`
 aptly_user="$APTLY_USER"
 aptly_password="$APTLY_PASSWORD"
 aptly_api="https://internal.aptly.info"
-version=`make version`
+version="$APTLY_VERSION"
 
 for file in $packages; do
     echo "Uploading $file..."
