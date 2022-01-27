@@ -14,6 +14,10 @@ def filterOutRedirects(_, s):
     return re.sub(r'Following redirect to .+?\n', '', s)
 
 
+def sortOutput(_, s):
+    return "\n".join(sorted(s.split("\n")))
+
+
 class UpdateMirror1Test(BaseTest):
     """
     update mirrors: regular update
@@ -23,10 +27,8 @@ class UpdateMirror1Test(BaseTest):
         "aptly -architectures=i386,amd64 mirror create --ignore-signatures varnish https://packagecloud.io/varnishcache/varnish30/debian/ wheezy main",
     ]
     runCmd = "aptly mirror update --ignore-signatures varnish"
-    outputMatchPrepare = filterOutRedirects
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutRedirects
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror2Test(BaseTest):
@@ -105,10 +107,8 @@ class UpdateMirror7Test(BaseTest):
         "aptly mirror create --keyring=aptlytest.gpg -architectures=amd64 flat https://cloud.r-project.org/bin/linux/debian jessie-cran35/",
     ]
     runCmd = "aptly mirror update --keyring=aptlytest.gpg flat"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror8Test(BaseTest):
@@ -121,7 +121,8 @@ class UpdateMirror8Test(BaseTest):
         "aptly mirror create --keyring=aptlytest.gpg gnuplot-maverick-src http://ppa.launchpad.net/gladky-anton/gnuplot/ubuntu/ maverick",
     ]
     runCmd = "aptly mirror update --keyring=aptlytest.gpg gnuplot-maverick-src"
-    outputMatchPrepare = filterOutSignature
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror9Test(BaseTest):
@@ -133,10 +134,8 @@ class UpdateMirror9Test(BaseTest):
         "aptly mirror create --keyring=aptlytest.gpg -with-sources flat-src https://cloud.r-project.org/bin/linux/debian jessie-cran35/",
     ]
     runCmd = "aptly mirror update --keyring=aptlytest.gpg flat-src"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror10Test(BaseTest):
@@ -148,10 +147,8 @@ class UpdateMirror10Test(BaseTest):
         "aptly mirror create -keyring=aptlytest.gpg -with-sources -filter='!(Name (% r-*)), !($$PackageType (source))' flat-src https://cloud.r-project.org/bin/linux/debian jessie-cran35/",
     ]
     runCmd = "aptly mirror update --keyring=aptlytest.gpg flat-src"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror11Test(BaseTest):
@@ -164,11 +161,9 @@ class UpdateMirror11Test(BaseTest):
     fixtureCmds = [
         "aptly mirror create -keyring=aptlytest.gpg -filter='Priority (required), Name (% s*)' -architectures=i386 stretch-main ftp://ftp.ru.debian.org/debian/ stretch main",
     ]
-    outputMatchPrepare = filterOutSignature
     runCmd = "aptly mirror update -keyring=aptlytest.gpg stretch-main"
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror12Test(BaseTest):
@@ -181,10 +176,8 @@ class UpdateMirror12Test(BaseTest):
         "aptly -architectures=i386,amd64 mirror create -keyring=aptlytest.gpg -filter='$$Source (gnupg2)' -with-udebs stretch http://cdn-fastly.deb.debian.org/debian/ stretch main non-free",
     ]
     runCmd = "aptly mirror update -keyring=aptlytest.gpg stretch"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror13Test(BaseTest):
@@ -196,10 +189,8 @@ class UpdateMirror13Test(BaseTest):
         "aptly -architectures=i386,amd64 mirror create --ignore-signatures varnish https://packagecloud.io/varnishcache/varnish30/debian/ wheezy main",
     ]
     runCmd = "aptly mirror update --ignore-signatures --skip-existing-packages varnish"
-    outputMatchPrepare = filterOutRedirects
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutRedirects
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror14Test(BaseTest):
@@ -212,10 +203,8 @@ class UpdateMirror14Test(BaseTest):
         "aptly mirror update --ignore-signatures --skip-existing-packages varnish"
     ]
     runCmd = "aptly mirror update --ignore-signatures --skip-existing-packages varnish"
-    outputMatchPrepare = filterOutRedirects
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutRedirects
+    outputMatchPrepare = sortOutput
 
 
 # # disabled because https://dl.bintray.com/smira/deb/ seems to be missing
@@ -356,10 +345,8 @@ class UpdateMirror20Test(BaseTest):
     ]
     configOverride = {"gpgProvider": "internal"}
     runCmd = "aptly mirror update --keyring=aptlytest.gpg flat"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror21Test(BaseTest):
@@ -404,10 +391,8 @@ class UpdateMirror23Test(BaseTest):
         "aptly -architectures=s390x mirror create -keyring=aptlytest.gpg -filter='installer' -with-installer stretch http://cdn-fastly.deb.debian.org/debian/ stretch main non-free",
     ]
     runCmd = "aptly mirror update -keyring=aptlytest.gpg stretch"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
 
 
 class UpdateMirror24Test(BaseTest):
@@ -420,7 +405,5 @@ class UpdateMirror24Test(BaseTest):
         "aptly -architectures=amd64 mirror create -keyring=aptlytest.gpg -filter='installer' -with-installer trusty http://mirror.enzu.com/ubuntu/ trusty main restricted",
     ]
     runCmd = "aptly mirror update -keyring=aptlytest.gpg trusty"
-    outputMatchPrepare = filterOutSignature
-
-    def output_processor(self, output):
-        return "\n".join(sorted(output.split("\n")))
+    output_processor = filterOutSignature
+    outputMatchPrepare = sortOutput
