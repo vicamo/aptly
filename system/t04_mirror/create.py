@@ -96,7 +96,7 @@ class CreateMirror9Test(BaseTest):
     requiresGPG1 = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|Warning: using insecure memory!\n', '', s)
+        return re.sub(r'Signature made .* using|Warning: using insecure memory!\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -117,7 +117,7 @@ class CreateMirror10Test(BaseTest):
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.DOTALL)
 
 
 class CreateMirror11Test(BaseTest):
@@ -128,7 +128,7 @@ class CreateMirror11Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -145,7 +145,7 @@ class CreateMirror12Test(BaseTest):
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.DOTALL)
 
 
 class CreateMirror13Test(BaseTest):
@@ -168,7 +168,7 @@ class CreateMirror14Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -220,7 +220,7 @@ class CreateMirror18Test(BaseTest):
     runCmd = "aptly mirror create -keyring=aptlytest.gpg mirror18 ppa:gladky-anton/gnuplot"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -236,7 +236,7 @@ class CreateMirror19Test(BaseTest):
     runCmd = "aptly -architectures='i386' mirror create -keyring=aptlytest.gpg -with-sources mirror19 http://security.debian.org/ stretch/updates main"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -278,7 +278,7 @@ class CreateMirror21Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeSHA512(s):
@@ -323,7 +323,7 @@ class CreateMirror24Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
     configOverride = {
         "gpgDisableVerify": True
@@ -370,7 +370,7 @@ class CreateMirror29Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
 
 class CreateMirror30Test(BaseTest):
@@ -384,7 +384,7 @@ class CreateMirror30Test(BaseTest):
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
 
 class CreateMirror31Test(BaseTest):
@@ -396,7 +396,7 @@ class CreateMirror31Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
 
 class CreateMirror32Test(BaseTest):

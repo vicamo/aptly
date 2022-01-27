@@ -7,7 +7,7 @@ from lib import BaseTest
 
 
 def filterOutSignature(_, s):
-    return re.sub(r'Signature made .* using', '', s)
+    return re.sub(r'Signature made .* using', '', s, flags=re.DOTALL)
 
 
 def filterOutRedirects(_, s):
@@ -391,7 +391,7 @@ class UpdateMirror22Test(BaseTest):
     runCmd = "aptly mirror update --keyring=aptlytest.gpg libnvidia-container"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|Packages filtered: .* -> 0.', '', s)
+        return re.sub(r'Signature made .* using|Packages filtered: .* -> 0.$', '', s, flags=re.DOTALL)
 
 
 class UpdateMirror23Test(BaseTest):

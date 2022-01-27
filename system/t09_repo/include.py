@@ -7,7 +7,7 @@ from lib import BaseTest
 
 
 def gpgRemove(_, s):
-    return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+    return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.DOTALL)
 
 
 def changesRemove(_, s):
