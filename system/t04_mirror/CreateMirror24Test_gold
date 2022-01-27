@@ -1,7 +1,7 @@
 Downloading http://security.debian.org/dists/stretch/updates/InRelease...
-gpgv:  RSA key ID 331F7F50
+gpgv:  RSA key 379483D8B60160B155B372DDAA8E81B4331F7F50
 gpgv: Good signature from "Debian Security Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>"
-gpgv:  RSA key ID E562B32A
+gpgv:  RSA key 5237CEEEF212F3D51C74ABE0112695A0E562B32A
 gpgv: Good signature from "Debian Security Archive Automatic Signing Key (10/buster) <ftpmaster@debian.org>"
 
 Mirror [mirror24]: http://security.debian.org/ stretch/updates successfully added.
