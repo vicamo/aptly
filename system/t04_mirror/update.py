@@ -7,7 +7,7 @@ from lib import BaseTest
 
 
 def filterOutSignature(_, s):
-    return re.sub(r'Signature made .* using', '', s)
+    return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
 
 
 def filterOutRedirects(_, s):
