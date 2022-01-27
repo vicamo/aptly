@@ -113,7 +113,6 @@ class CreateMirror10Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror10 http://cdn-fastly.deb.debian.org/debian/ stretch-backports"
     fixtureGpg = False
-    gold_processor = BaseTest.expand_environ
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
@@ -141,7 +140,6 @@ class CreateMirror12Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror12 http://cdn-fastly.deb.debian.org/debian/ stretch"
     fixtureGpg = False
-    gold_processor = BaseTest.expand_environ
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
