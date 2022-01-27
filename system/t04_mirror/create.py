@@ -127,7 +127,7 @@ class CreateMirror11Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -166,7 +166,7 @@ class CreateMirror14Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -218,7 +218,7 @@ class CreateMirror18Test(BaseTest):
     runCmd = "aptly mirror create -keyring=aptlytest.gpg mirror18 ppa:gladky-anton/gnuplot"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -234,7 +234,7 @@ class CreateMirror19Test(BaseTest):
     runCmd = "aptly -architectures='i386' mirror create -keyring=aptlytest.gpg -with-sources mirror19 http://security.debian.org/ stretch/updates main"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -276,7 +276,7 @@ class CreateMirror21Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeSHA512(s):
@@ -321,7 +321,7 @@ class CreateMirror24Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     configOverride = {
         "gpgDisableVerify": True
@@ -406,7 +406,7 @@ class CreateMirror32Test(BaseTest):
     requiresGPG2 = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .*? using', '', s, flags=re.DOTALL)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
