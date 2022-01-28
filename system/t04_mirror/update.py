@@ -344,6 +344,7 @@ class UpdateMirror20Test(BaseTest):
         "aptly mirror create --keyring=aptlytest.gpg -architectures=amd64 --filter='r-cran-class' flat https://cloud.r-project.org/bin/linux/debian jessie-cran35/",
     ]
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     runCmd = "aptly mirror update --keyring=aptlytest.gpg flat"
     output_processor = filterOutSignature
     outputMatchPrepare = sortOutput
@@ -355,6 +356,7 @@ class UpdateMirror21Test(BaseTest):
     """
     longTest = False
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
     fixtureCmds = [
         "aptly mirror create --keyring=aptlytest.gpg pagerduty http://packages.pagerduty.com/pdagent deb/"
@@ -371,6 +373,7 @@ class UpdateMirror22Test(BaseTest):
     update mirrors: SHA512 checksums only
     """
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
     fixtureCmds = [
         "aptly mirror create --keyring=aptlytest.gpg --filter=nomatch libnvidia-container https://nvidia.github.io/libnvidia-container/ubuntu16.04/amd64 ./"

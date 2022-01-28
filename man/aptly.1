@@ -160,7 +160,7 @@ don\(cqt verify remote mirrors with gpg(1), also can be disabled on per\-mirror 
 .
 .TP
 \fBgpgProvider\fR
-implementation of PGP signing/validation \- \fBgpg\fR for external \fBgpg\fR utility or \fBinternal\fR to use Go internal implementation; \fBgpg1\fR might be used to force use of GnuPG 1\.x, \fBgpg2\fR enables GnuPG 2\.x only; default is to use GnuPG 1\.x if available and GnuPG 2\.x otherwise
+implementation of PGP signing/validation \- \fBgpg\fR for external \fBgpg\fR utility or \fBinternal\fR to use Go internal implementation (deprecated); \fBgpg1\fR might be used to force use of GnuPG 1\.x, \fBgpg2\fR enables GnuPG 2\.x only; default is to use GnuPG 1\.x if available and GnuPG 2\.x otherwise
 .
 .TP
 \fBdownloadSourcePackages\fR
@@ -444,7 +444,7 @@ when processing dependencies, print detailed logs
 .
 .TP
 \-\fBgpg\-provider\fR=
-PGP implementation ("gpg", "gpg1", "gpg2" for external gpg or "internal" for Go internal implementation)
+PGP implementation ("gpg", "gpg1", "gpg2" for external gpg or "internal" for deprecated Go internal implementation)
 .
 .SH "CREATE NEW MIRROR"
 \fBaptly\fR \fBmirror\fR \fBcreate\fR \fIname\fR \fIarchive url\fR \fIdistribution\fR [\fIcomponent1\fR \|\.\|\.\|\.]

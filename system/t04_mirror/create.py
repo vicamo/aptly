@@ -370,6 +370,7 @@ class CreateMirror29Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror9 http://cdn-fastly.deb.debian.org/debian/ stretch-backports"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
@@ -382,6 +383,7 @@ class CreateMirror30Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror10 http://cdn-fastly.deb.debian.org/debian/ stretch"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     gold_processor = BaseTest.expand_environ
     fixtureGpg = False
     expectedCode = 1
@@ -396,6 +398,7 @@ class CreateMirror31Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror11 http://cdn-fastly.deb.debian.org/debian/ stretch"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):

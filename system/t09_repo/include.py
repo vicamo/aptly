@@ -480,6 +480,7 @@ class IncludeRepo20Test(BaseTest):
     runCmd = "aptly repo include -no-remove-files -keyring=${files}/aptly.pub ${changes}"
     outputMatchPrepare = gpgRemove
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
 
 class IncludeRepo21Test(BaseTest):
@@ -492,6 +493,7 @@ class IncludeRepo21Test(BaseTest):
     runCmd = "aptly repo include -keyring=${files}/aptly.pub "
     expectedCode = 1
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
     def outputMatchPrepare(self, s):
         return gpgRemove(self, tempDirRemove(self, s))

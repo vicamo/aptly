@@ -806,6 +806,7 @@ class PublishRepo30Test(BaseTest):
     runCmd = "aptly publish repo -keyring=${files}/aptly.pub -secret-keyring=${files}/aptly.sec -distribution=maverick local-repo"
     gold_processor = BaseTest.expand_environ
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
     def check(self):
         super(PublishRepo30Test, self).check()
@@ -830,6 +831,7 @@ class PublishRepo31Test(BaseTest):
     runCmd = "aptly publish repo -keyring=${files}/aptly_passphrase.pub -secret-keyring=${files}/aptly_passphrase.sec -passphrase=verysecret -distribution=maverick local-repo"
     gold_processor = BaseTest.expand_environ
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
     def outputMatchPrepare(_, s):
         return re.sub(r' \d{4}-\d{2}-\d{2}', '', s)
