@@ -3,6 +3,10 @@ import re
 from lib import BaseTest
 
 
+def filterOutRedirects(_, s):
+    return re.sub(r'Following redirect to .+?\n', '', s)
+
+
 class CreateMirror1Test(BaseTest):
     """
     create mirror: all architectures + all components
@@ -353,6 +357,7 @@ class CreateMirror27Test(BaseTest):
     create mirror: component with slashes, no stripping
     """
     runCmd = "aptly mirror create --ignore-signatures mirror27 http://linux.dell.com/repo/community/ubuntu wheezy openmanage/740"
+    output_processor = filterOutRedirects
 
     def check(self):
         self.check_output()
