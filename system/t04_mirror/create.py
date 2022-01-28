@@ -3,6 +3,10 @@ import re
 from lib import BaseTest
 
 
+def filterOutRedirects(_, s):
+    return re.sub(r'Following redirect to .+?\n', '', s)
+
+
 class CreateMirror1Test(BaseTest):
     """
     create mirror: all architectures + all components
@@ -113,11 +117,10 @@ class CreateMirror10Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror10 http://cdn-fastly.deb.debian.org/debian/ stretch-backports"
     fixtureGpg = False
-    gold_processor = BaseTest.expand_environ
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+        return re.sub(r'Signature made .*? using|gpgv: keyblock resource .*?\n|gpgv: Can\'t check signature: .*?\n', '', s, flags=re.DOTALL)
 
 
 class CreateMirror11Test(BaseTest):
@@ -128,7 +131,7 @@ class CreateMirror11Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -141,11 +144,10 @@ class CreateMirror12Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror12 http://cdn-fastly.deb.debian.org/debian/ stretch"
     fixtureGpg = False
-    gold_processor = BaseTest.expand_environ
     expectedCode = 1
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+        return re.sub(r'Signature made .*? using|gpgv: keyblock resource .*?\n|gpgv: Can\'t check signature: .*?\n', '', s, flags=re.DOTALL)
 
 
 class CreateMirror13Test(BaseTest):
@@ -168,7 +170,7 @@ class CreateMirror14Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -220,7 +222,7 @@ class CreateMirror18Test(BaseTest):
     runCmd = "aptly mirror create -keyring=aptlytest.gpg mirror18 ppa:gladky-anton/gnuplot"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()
@@ -236,7 +238,7 @@ class CreateMirror19Test(BaseTest):
     runCmd = "aptly -architectures='i386' mirror create -keyring=aptlytest.gpg -with-sources mirror19 http://security.debian.org/ stretch/updates main"
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeDates(s):
@@ -278,7 +280,7 @@ class CreateMirror21Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         def removeSHA512(s):
@@ -323,7 +325,7 @@ class CreateMirror24Test(BaseTest):
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
-        return re.sub(r'Signature made .* using', '', s)
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     configOverride = {
         "gpgDisableVerify": True
@@ -355,6 +357,7 @@ class CreateMirror27Test(BaseTest):
     create mirror: component with slashes, no stripping
     """
     runCmd = "aptly mirror create --ignore-signatures mirror27 http://linux.dell.com/repo/community/ubuntu wheezy openmanage/740"
+    output_processor = filterOutRedirects
 
     def check(self):
         self.check_output()
@@ -367,6 +370,7 @@ class CreateMirror29Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror9 http://cdn-fastly.deb.debian.org/debian/ stretch-backports"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
@@ -379,6 +383,7 @@ class CreateMirror30Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror10 http://cdn-fastly.deb.debian.org/debian/ stretch"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     gold_processor = BaseTest.expand_environ
     fixtureGpg = False
     expectedCode = 1
@@ -393,6 +398,7 @@ class CreateMirror31Test(BaseTest):
     """
     runCmd = "aptly mirror create --keyring=aptlytest.gpg mirror11 http://cdn-fastly.deb.debian.org/debian/ stretch"
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
     fixtureGpg = True
 
     def outputMatchPrepare(self, s):
@@ -408,9 +414,7 @@ class CreateMirror32Test(BaseTest):
     requiresGPG2 = True
 
     def outputMatchPrepare(self, s):
-        return \
-            re.sub(r'([A-F0-9]{8})[A-F0-9]{8}', r'\1',
-                   re.sub(r'^gpgv: (Signature made .+|.+using RSA key.+)\n', '', s, flags=re.MULTILINE))
+        return re.sub(r'Signature made .*? using|gpgv: can\'t allocate lock for.*?\n', '', s, flags=re.DOTALL)
 
     def check(self):
         self.check_output()

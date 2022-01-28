@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+name: Create release
+
+permissions:
+  contents: write
+
+jobs:
+  github:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Download binary-go${{ needs.build.outputs.go-version }}
+        uses: actions/download-artifact@v2
+        with:
+          name: binary-go${{ needs.build.outputs.go-version }}
+          path: build
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          APTLY_VERSION: ${{ needs.build.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: aptly ${{ github.ref }}
+          draft: true
+          files: 'build/*'
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@master
+        if: ! startsWith(github.ref, 'refs/tags/')
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET: 'aptly-nightly'
+          SOURCE_DIR: 'build'
+        with:
+          args: --acl public-read
+      - name: Push to internal
+        env:
+          APTLY_VERSION: ${{ needs.build.outputs.version }}
+          APTLY_USER: ${{ secrets.APTLY_USER }}
+          APTLY_PASSWORD: ${{ secrets.APTLY_PASSWORD }}
+        run: bash ./upload-artifacts.sh ${{ startsWith(github.ref, 'refs/tags/') && 'release' || 'nightly' }}

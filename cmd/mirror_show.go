@@ -21,7 +21,7 @@ func aptlyMirrorShow(cmd *commander.Command, args []string) error {
 	jsonFlag := cmd.Flag.Lookup("json").Value.Get().(bool)
 
 	if jsonFlag {
-		return aptlyMirrorShowJson(cmd, args)
+		return aptlyMirrorShowJSON(cmd, args)
 	}
 
 	return aptlyMirrorShowTxt(cmd, args)
@@ -92,7 +92,7 @@ func aptlyMirrorShowTxt(cmd *commander.Command, args []string) error {
 	return err
 }
 
-func aptlyMirrorShowJson(cmd *commander.Command, args []string) error {
+func aptlyMirrorShowJSON(cmd *commander.Command, args []string) error {
 	var err error
 
 	name := args[0]
@@ -112,7 +112,7 @@ func aptlyMirrorShowJson(cmd *commander.Command, args []string) error {
 	if withPackages {
 		if repo.RefList() != nil {
 			var list *deb.PackageList
-			list, err = deb.NewPackageListFromRefList(repo.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
+			list, _ = deb.NewPackageListFromRefList(repo.RefList(), context.CollectionFactory().PackageCollection(), context.Progress())
 
 			list.PrepareIndex()
 			list.ForEachIndexed(func(p *deb.Package) error {

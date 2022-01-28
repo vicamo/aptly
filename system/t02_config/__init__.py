@@ -46,7 +46,7 @@ class ConfigInFileTest(BaseTest):
     prepare = BaseTest.prepare_remove_all
 
     def outputMatchPrepare(_, s):
-        return re.sub(r'  -(cpuprofile|memprofile|memstats|meminterval)=.*\n', '', s, flags=re.MULTILINE)
+        return re.sub(r'  -(cpuprofile|memprofile|memstats|meminterval)=.*\n', '', s)
 
 
 class ConfigInMissingFileTest(BaseTest):

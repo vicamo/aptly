@@ -7,7 +7,7 @@ from lib import BaseTest
 
 
 def gpgRemove(_, s):
-    return re.sub(r'Signature made .* using|gpgv: keyblock resource .*$|gpgv: Can\'t check signature: .*$', '', s, flags=re.MULTILINE)
+    return re.sub(r'Signature made .*? using|gpgv: keyblock resource .*?\n|gpgv: Can\'t check signature: .*?\n', '', s, flags=re.DOTALL)
 
 
 def changesRemove(_, s):
@@ -480,6 +480,7 @@ class IncludeRepo20Test(BaseTest):
     runCmd = "aptly repo include -no-remove-files -keyring=${files}/aptly.pub ${changes}"
     outputMatchPrepare = gpgRemove
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
 
 class IncludeRepo21Test(BaseTest):
@@ -492,6 +493,7 @@ class IncludeRepo21Test(BaseTest):
     runCmd = "aptly repo include -keyring=${files}/aptly.pub "
     expectedCode = 1
     configOverride = {"gpgProvider": "internal"}
+    requiresGPG1 = True
 
     def outputMatchPrepare(self, s):
         return gpgRemove(self, tempDirRemove(self, s))

@@ -20,3 +20,11 @@ linters:
    - vetshadow
    - goconst
    - interfacer
+
+issues:
+  exclude-rules:
+   # See https://github.com/golangci/golangci-lint/issues/741
+   - path: pgp/openpgp.go
+     linters:
+      - staticcheck
+     text: SA1019

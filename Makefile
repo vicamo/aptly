@@ -22,7 +22,7 @@ modules:
 	go mod tidy -v
 
 dev:
-	go get -u github.com/laher/goxc
+	go get -u github.com/laher/goxc@e513940c33796cf695d78637d035a6c7796ff030
 
 check: system/env
 ifeq ($(RUN_LONG_TESTS), yes)
@@ -44,6 +44,7 @@ system-test: install system/env
 ifeq ($(RUN_LONG_TESTS), yes)
 	if [ ! -e ~/aptly-fixture-db ]; then git clone https://github.com/aptly-dev/aptly-fixture-db.git ~/aptly-fixture-db/; fi
 	if [ ! -e ~/aptly-fixture-pool ]; then git clone https://github.com/aptly-dev/aptly-fixture-pool.git ~/aptly-fixture-pool/; fi
+	if ! while dot >/dev/null 2>&1; then echo "graphviz/dot not installed" >&2; exit 1; fi
 	PATH=$(BINPATH)/:$(PATH) && . system/env/bin/activate && APTLY_VERSION=$(VERSION) $(PYTHON) system/run.py --long $(TESTS)
 endif
 
